@@ -78,3 +78,11 @@ def carry_ins(instruction):
 def get_pc():
     global PC
     return PC
+
+def init_data():
+    global RegData,PC,RomData,Timesum,Collect
+    RegData = {}
+    PC = 0
+    RomData = [0] * 1024
+    Timesum = 0
+    Collect = 0

@@ -1,14 +1,24 @@
 OnebitLastPredict = 0
 TwoBitLastPredict = 1
-Predict_Time = 0
-Fetch_Time = 0
+Predict_Time = [0] * 5
+Fetch_Time = [0] * 5
 Global_History = 0
+
+
+def init_global():
+    OnebitLastPredict = 0
+    TwoBitLastPredict = 1
+    Predict_Time = [0] * 5
+    Fetch_Time = [0] * 5
+    Global_History = 0
 
 
 class BPT:
     Predict_all = [None] * 16
-    for i in range(16):
-        Predict_all[i] = 1
+
+    def __init__(self):
+        for i in range(16):
+            self.Predict_all[i] = 1
 
     def get_predict(self, history):
         return self.Predict_all[history]
@@ -24,15 +34,47 @@ class BPT:
 
 class BHT:
     History = [None] * 31
-    for i in range(31):
-        History[i] = 0
-    BPT_all = []
-    for i in range(31):
-        BPT_all.append(BPT())
+    BPT_all = [None] * 31
+
+    def __init__(self):
+        for i in range(31):
+            self.History[i] = 0
+        for i in range(31):
+            self.BPT_all[i] = BPT()
+
+    def clear(self):
+        for i in range(31):
+            self.History[i] = 0
+        for i in range(31):
+            BPT_all[i] = BPT()
+
+
+class BPT_Global:
+    Predict_all = [None] * 16
+
+    def __init__(self):
+        for i in range(16):
+            self.Predict_all[i] = 1
+
+    def clear(self):
+        for i in range(16):
+            self.Predict_all[i] = 1
+
+    def get_predict(self, history):
+        return self.Predict_all[history]
+
+    def update(self, history, change):
+        self.Predict_all[history] += change
+        if (self.Predict_all[history] < 0):
+            self.Predict_all[history] = 0
+        elif (self.Predict_all[history] > 3):
+            self.Predict_all[history] = 3
+        return
 
 
 LocalBranch = BHT()
-GlobalBranch = BPT()
+GlobalBranch = BPT_Global()
+MergeBranch = [1] * 35
 
 
 def OnebitPredict():
@@ -66,8 +108,9 @@ def UpdateTwobitPredict(Predict):
 
 
 def UpdateLocalPredict(Predict, PC):
-    global Predict_Time, Fetch_Time
+    global LocalBranch
     Fetch = False
+    PC %= 32
     PC_history = LocalBranch.History[PC]
     pre = LocalBranch.BPT_all[PC].get_predict(PC_history)
     if (Predict == 0) & (pre < 2):
@@ -86,8 +129,8 @@ def UpdateLocalPredict(Predict, PC):
 
 
 def UpdateGlobalPredict(Predict):
-    global Global_History, GlobalBranch, Predict_Time, Fetch_Time
-    Fetch=False
+    global Global_History, GlobalBranch
+    Fetch = False
     pre = GlobalBranch.get_predict(Global_History)
     if (Predict == 0) & (pre < 2):
         Fetch = True
@@ -104,13 +147,28 @@ def UpdateGlobalPredict(Predict):
     return Fetch
 
 
-def UpdateMergePredict(Predict):
-    pass
+def UpdateMergePredict(Predict, PC):
+    global MergeBranch
+    GlobalPre = UpdateGlobalPredict(Predict)
+    LocalPre = UpdateLocalPredict(Predict, PC)
+    if MergeBranch[PC] > 1:
+        pre = GlobalPre
+    else:
+        pre = LocalPre
+    if LocalPre > GlobalPre:
+        MergeBranch[PC] -= 1
+    if GlobalPre > LocalPre:
+        MergeBranch[PC] += 1
+    if MergeBranch[PC] > 3:
+        MergeBranch[PC] = 3
+    if MergeBranch[PC] < 0:
+        MergeBranch[PC] = 0
+    return pre
 
 
-def get_acu():
+def get_acu(method):
     global Predict_Time, Fetch_Time
-    return Fetch_Time / Predict_Time
+    return Fetch_Time[method] / Predict_Time[method]
 
 
 if __name__ == '__main__':
@@ -122,11 +180,11 @@ if __name__ == '__main__':
         print(a)
 
 
-def Fetch_Increase():
+def Fetch_Increase(method):
     global Fetch_Time
-    Fetch_Time += 1
+    Fetch_Time[method] += 1
 
 
-def Predict_Increase():
+def Predict_Increase(method):
     global Predict_Time
-    Predict_Time += 1
+    Predict_Time[method] += 1
