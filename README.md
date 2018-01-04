@@ -4,6 +4,8 @@
 ![][2]
 ![][3]
 
+## QA
+
 - What's it?
 
   Branch Performance Predictor for 32-Bit MIPS Instruction Set
@@ -12,6 +14,13 @@
 
   - With git:`git@github.com:xiejiangzhao/MIPS_Predict.git`
   - Just Download:[Zip](https://github.com/xiejiangzhao/MIPS_Predict/archive/master.zip)
+
+## Structure
+
+- Carry.py:Define the instruction function
+- Instruction_Translate:Convert string to list
+- Predict.py:Predictor data
+- mian.py:Main program
 
 ## Support
 
