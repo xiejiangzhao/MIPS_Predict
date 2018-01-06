@@ -20,6 +20,9 @@ class BPT:
         elif (self.Predict_all[history] > 3):
             self.Predict_all[history] = 3
         return
+    def clear(self):
+        for i in range(16):
+            self.Predict_all[i] = 1
 
 
 GlobalBranch = BPT()
@@ -57,3 +60,8 @@ def Predict_Increase():
 def get_acu():
     global Predict_Time, Fetch_Time
     return Fetch_Time / Predict_Time
+
+def clear_data():
+    global Predict_Time,Fetch_Time,Global_History
+    Predict_Time=Fetch_Time=Global_History=0
+    GlobalBranch.clear()

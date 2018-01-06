@@ -25,3 +25,7 @@ def Predict_Increase():
 def get_acu():
     global Predict_Time, Fetch_Time
     return Fetch_Time / Predict_Time
+
+def clear_data():
+    global OnebitLastPredict
+    OnebitLastPredict=0

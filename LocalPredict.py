@@ -19,23 +19,26 @@ class BPT:
         elif (self.Predict_all[history] > 3):
             self.Predict_all[history] = 3
         return
+    def clear(self):
+        for i in range(16):
+            self.Predict_all[i] = 1
 
 
 class BHT:
-    History = [None] * 31
-    BPT_all = [None] * 31
+    History = [None] * 32
+    BPT_all = [None] * 32
 
     def __init__(self):
-        for i in range(31):
+        for i in range(32):
             self.History[i] = 0
-        for i in range(31):
+        for i in range(32):
             self.BPT_all[i] = BPT()
 
     def clear(self):
-        for i in range(31):
+        for i in range(32):
             self.History[i] = 0
-        for i in range(31):
-            self.BPT_all[i] = BPT()
+        for i in range(32):
+            self.BPT_all[i].clear()
 
 
 LocalBranch = BHT()
@@ -75,3 +78,9 @@ def Predict_Increase():
 def get_acu():
     global Predict_Time, Fetch_Time
     return Fetch_Time / Predict_Time
+
+def clear_data():
+    global Predict_Time,Fetch_Time,LocalBranch
+    Predict_Time = 0
+    Fetch_Time = 0
+    LocalBranch.clear()

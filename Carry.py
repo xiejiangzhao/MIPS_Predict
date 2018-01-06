@@ -1,3 +1,4 @@
+import random
 RegData = {}
 PC = 0
 RomData = [0] * 1024
@@ -9,6 +10,9 @@ def init():
     global RegData
     for i in range(31):
         RegData['$' + str(i)] = 0
+    for i in range(1024):
+        RomData[i]=random.randint(1,1500)
+    RegData['$0']=0
 
 
 def carry_ins(instruction):
