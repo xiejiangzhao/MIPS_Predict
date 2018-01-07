@@ -94,9 +94,9 @@ def plotallx(i):
 
 FileData = []
 init()
-f = open("""C:\\Users\谢江钊\Desktop\\v.txt""", 'r')
+f = open("""C:\\Users\谢江钊\Desktop\\ha.txt""", 'r')
 sizeofsort = 3
-for i in range(1, 60, 2):
+for i in range(1, 160, 2):
     sizeofsort = i
     plotallx(i)
     testpar = 2
