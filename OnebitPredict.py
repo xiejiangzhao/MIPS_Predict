@@ -1,14 +1,15 @@
-OnebitLastPredict = 0
+OnebitLastPredict = [0]*32
 Predict_Time = 0
 Fetch_Time = 0
 
 
-def UpdateOnebitPredict(Predict):
+def UpdateOnebitPredict(Predict,PC):
+    PC%=32
     global OnebitLastPredict
     Fetch = False
-    if Predict == OnebitLastPredict:
+    if Predict == OnebitLastPredict[PC]:
         Fetch = True
-    OnebitLastPredict = Predict
+    OnebitLastPredict[PC] = Predict
     return Fetch
 
 
@@ -28,4 +29,4 @@ def get_acu():
 
 def clear_data():
     global OnebitLastPredict
-    OnebitLastPredict=0
+    OnebitLastPredict=[0]*32

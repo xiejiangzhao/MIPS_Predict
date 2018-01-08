@@ -1,21 +1,21 @@
-TwoBitLastPredict = 0
+TwoBitLastPredict = [0]*32
 Predict_Time = 0
 Fetch_Time = 0
 
-
-def UpdateTwobitPredict(Predict):
+def UpdateTwobitPredict(Predict,PC):
     global TwoBitLastPredict, Predict_Time, Fetch_Time
+    PC%=32
     Fetch = False
-    if Predict == 0 & (TwoBitLastPredict < 2):
+    if Predict == 0 & (TwoBitLastPredict[PC] < 2):
         Fetch = True
-        TwoBitLastPredict = max(TwoBitLastPredict - 1, 0)
-    if Predict == 1 & (TwoBitLastPredict > 1):
+        TwoBitLastPredict[PC] = max(TwoBitLastPredict[PC] - 1, 0)
+    if Predict == 1 & (TwoBitLastPredict[PC] > 1):
         Fetch = True
-        TwoBitLastPredict = min(TwoBitLastPredict + 1, 3)
-    if Predict == 0 & (TwoBitLastPredict > 1):
-        TwoBitLastPredict = max(TwoBitLastPredict - 1, 0)
-    if Predict == 1 & (TwoBitLastPredict < 2):
-        TwoBitLastPredict = min(TwoBitLastPredict + 1, 3)
+        TwoBitLastPredict[PC] = min(TwoBitLastPredict[PC] + 1, 3)
+    if Predict == 0 & (TwoBitLastPredict[PC] > 1):
+        TwoBitLastPredict[PC] = max(TwoBitLastPredict[PC] - 1, 0)
+    if Predict == 1 & (TwoBitLastPredict[PC] < 2):
+        TwoBitLastPredict[PC] = min(TwoBitLastPredict[PC] + 1, 3)
     return Fetch
 
 
@@ -37,4 +37,4 @@ def clear_data():
     global Fetch_Time,Predict_Time,TwoBitLastPredict
     Fetch_Time=0
     Predict_Time=0
-    TwoBitLastPredict=0
+    TwoBitLastPredict=[0]*32

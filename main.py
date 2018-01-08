@@ -2,6 +2,8 @@ from Carry import carry_ins, init, get_pc, RegData, RomData, init_data
 from Instruction_Translate import ins_decode
 from Predict import init_global
 import matplotlib.pyplot as plt
+import numpy as np
+from scipy.interpolate import spline
 import OnebitPredict
 import TwobitPredict
 import LocalPredict
@@ -68,9 +70,9 @@ def get_acu(method):
 
 def test(method, predict, pc=0):
     if method == 0:
-        res = OnebitPredict.UpdateOnebitPredict(predict)
+        res = OnebitPredict.UpdateOnebitPredict(predict,pc)
     elif method == 1:
-        res = TwobitPredict.UpdateTwobitPredict(predict)
+        res = TwobitPredict.UpdateTwobitPredict(predict,pc)
     elif method == 2:
         res = LocalPredict.UpdateLocalPredict(predict, pc)
     elif method == 3:
@@ -94,9 +96,9 @@ def plotallx(i):
 
 FileData = []
 init()
-f = open("""C:\\Users\谢江钊\Desktop\\ha.txt""", 'r')
+f = open("""C:\\Users\谢江钊\Desktop\\v.txt""", 'r')
 sizeofsort = 3
-for i in range(1, 160, 2):
+for i in range(1, 120, 1):
     sizeofsort = i
     plotallx(i)
     testpar = 2
@@ -137,6 +139,8 @@ for i in range(1, 160, 2):
     TwobitPredict.clear_data()
     GlobalPredict.clear_data()
     MergePredict.clear_data()
+
+
 plt.plot(plotx_Global, ploty_Global, 'm-', label='Global_Predict')
 plt.plot(plotx_Local, ploty_Local, 'r-', label='Local_Predict')
 plt.plot(plotx_Onebit, ploty_Onebit, 'g-', label='Onebit_Predict')
